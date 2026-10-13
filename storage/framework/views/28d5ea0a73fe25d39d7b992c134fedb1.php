@@ -1,0 +1,97 @@
+<div class="bg-white rounded-2xl border border-gray-100 hover:border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+    
+    <!-- Image & Badges -->
+    <div class="relative bg-gray-100 aspect-square overflow-hidden">
+        <a href="<?php echo e(route('products.show', $product->slug)); ?>">
+            <img src="<?php echo e($product->image); ?>" alt="<?php echo e($product->name); ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+        </a>
+
+        <!-- Badges -->
+        <div class="absolute top-3 left-3 flex flex-col gap-1">
+            <?php if($product->discount_price && $product->discount_price < $product->price): ?>
+                <?php
+                    $discountPct = round((($product->price - $product->discount_price) / $product->price) * 100);
+                ?>
+                <span class="bg-rose-500 text-white text-[11px] font-black px-2 py-0.5 rounded-full shadow">
+                    -<?php echo e($discountPct); ?>%
+                </span>
+            <?php endif; ?>
+            <?php if($product->is_featured): ?>
+                <span class="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow">
+                    Featured
+                </span>
+            <?php endif; ?>
+        </div>
+
+        <!-- Wishlist Quick Action Button -->
+        <form action="<?php echo e(route('wishlist.add')); ?>" method="POST" class="absolute top-3 right-3">
+            <?php echo csrf_field(); ?>
+            <input type="hidden" name="product_id" value="<?php echo e($product->id); ?>">
+            <button type="submit" class="w-8 h-8 rounded-full bg-white/90 hover:bg-white text-gray-600 hover:text-red-500 flex items-center justify-center shadow-md transition transform hover:scale-110" title="Add to Wishlist">
+                <i class="fa-regular fa-heart text-sm"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- Product Details -->
+    <div class="p-5 flex flex-col flex-grow">
+        <!-- Brand & Category -->
+        <div class="flex items-center justify-between text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1">
+            <a href="<?php echo e(route('products.brand', $product->brand->slug)); ?>" class="hover:text-blue-600 truncate max-w-[50%]">
+                <?php echo e($product->brand->name); ?>
+
+            </a>
+            <a href="<?php echo e(route('products.category', $product->category->slug)); ?>" class="hover:text-blue-600 truncate max-w-[50%] text-right">
+                <?php echo e($product->category->name); ?>
+
+            </a>
+        </div>
+
+        <!-- Title -->
+        <h3 class="text-sm font-bold text-gray-900 group-hover:text-blue-600 transition line-clamp-2 mb-2">
+            <a href="<?php echo e(route('products.show', $product->slug)); ?>">
+                <?php echo e($product->name); ?>
+
+            </a>
+        </h3>
+
+        <!-- Short Description -->
+        <p class="text-xs text-gray-500 line-clamp-2 mb-4 flex-grow">
+            <?php echo e($product->short_description ?? Str::limit($product->description, 70)); ?>
+
+        </p>
+
+        <!-- Price & Cart Button -->
+        <div class="pt-3 border-t border-gray-100 flex items-center justify-between mt-auto">
+            <div>
+                <?php if($product->discount_price && $product->discount_price < $product->price): ?>
+                    <div class="text-lg font-black text-rose-600">
+                        $<?php echo e(number_format($product->discount_price, 2)); ?>
+
+                    </div>
+                    <div class="text-xs text-gray-400 line-through">
+                        $<?php echo e(number_format($product->price, 2)); ?>
+
+                    </div>
+                <?php else: ?>
+                    <div class="text-lg font-black text-gray-900">
+                        $<?php echo e(number_format($product->price, 2)); ?>
+
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- Quick Add to Cart Form -->
+            <form action="<?php echo e(route('cart.add')); ?>" method="POST">
+                <?php echo csrf_field(); ?>
+                <input type="hidden" name="product_id" value="<?php echo e($product->id); ?>">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white p-2.5 rounded-xl shadow hover:shadow-blue-500/30 transition transform hover:scale-105" title="Add to Cart">
+                    <i class="fa-solid fa-cart-plus text-sm"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
+<?php /**PATH C:\Users\SAJID CWIT\Desktop\Assignment\resources\views/pages/products/_card.blade.php ENDPATH**/ ?>
